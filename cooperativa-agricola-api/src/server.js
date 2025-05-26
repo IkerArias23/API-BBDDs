@@ -1,11 +1,10 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
-// Importar configuración de base de datos
 const connectDB = require('./config/database');
 
-// Importar rutas
 const indexRoutes = require('./routes/index');
 const agricultoresRoutes = require('./routes/agricultores');
 const productosRoutes = require('./routes/productos');
@@ -18,14 +17,17 @@ const utilsRoutes = require('./routes/utils');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Conectar a MongoDB
+app.use(express.static(path.join(__dirname, 'public')));
+
 connectDB();
 
-// Rutas principales
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.use('/api', indexRoutes);
 app.use('/api/agricultores', agricultoresRoutes);
 app.use('/api/productos', productosRoutes);
@@ -35,28 +37,40 @@ app.use('/api/config', configRoutes);
 app.use('/api/calendario', calendarioRoutes);
 app.use('/api/setup', utilsRoutes);
 
-// Manejo de errores 404
-app.use('*', (req, res) => {
+app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api/')) {
+        return next();
+    }
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.use('/api/*', (req, res) => {
     res.status(404).json({
-        error: 'Endpoint no encontrado',
+        success: false,
+        error: 'Endpoint de API no encontrado',
         availableEndpoints: [
-            '/api/status',
-            '/api/agricultores',
-            '/api/productos',
-            '/api/pesadas',
-            '/api/empresas',
-            '/api/config',
-            '/api/calendario',
-            '/api/setup'
+            '/api/status - Estado del servidor',
+            '/api/agricultores - Gestión de agricultores',
+            '/api/productos - Gestión de productos',
+            '/api/pesadas - Gestión de pesadas',
+            '/api/empresas - Gestión de empresas',
+            '/api/config - Configuración del sistema',
+            '/api/calendario - Sistema de calendario',
+            '/api/setup - Utilidades y datos de ejemplo'
         ]
     });
 });
 
-// Iniciar servidor
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor ejecutándose en puerto ${PORT}`);
-    console.log(`📍 API disponible en: http://localhost:${PORT}/api`);
-    console.log(`📊 Estado del servidor: http://localhost:${PORT}/api/status`);
+    console.log('🌾=====================================🌾');
+    console.log('🚀 COOPERATIVA AGRÍCOLA - SERVIDOR ACTIVO');
+    console.log('🌾=====================================🌾');
+    console.log(`📱 Interfaz Web: http://localhost:${PORT}`);
+    console.log(`🔗 API REST: http://localhost:${PORT}/api`);
+    console.log(`📊 Estado API: http://localhost:${PORT}/api/status`);
+    console.log(`📚 Documentación: http://localhost:${PORT}/api/docs`);
+    console.log('🌾=====================================🌾');
+    console.log('✅ Sistema listo para usar');
 });
 
 module.exports = app;

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌾 Cooperativa Agrícola - Sistema de Gestión</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="logo">
+            <h1>🌾 Cooperativa</h1>
+            <span>Sistema de Gestión</span>
+        </div>
+
+        <ul class="nav-menu">
+            <li><a href="#" class="nav-link active" data-section="dashboard">📊 Dashboard</a></li>
+            <li><a href="#" class="nav-link" data-section="agricultores">👨‍🌾 Agricultores</a></li>
+            <li><a href="#" class="nav-link" data-section="productos">🥕 Productos</a></li>
+            <li><a href="#" class="nav-link" data-section="calendario">📅 Calendario</a></li>
+            <li><a href="#" class="nav-link" data-section="empresas">🏢 Empresas</a></li>
+            <li><a href="#" class="nav-link" data-section="config">⚙️ Config</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="header">
+                <h2>Dashboard</h2>
+                <div class="status-badge" id="api-status">🔄 Conectando...</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Agricultores</h3>
+                    <div class="stat-number" id="total-agricultores">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Productos</h3>
+                    <div class="stat-number" id="total-productos">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Empresas</h3>
+                    <div class="stat-number" id="total-empresas">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Entregas Hoy</h3>
+                    <div class="stat-number" id="entregas-hoy">-</div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary" onclick="loadExampleData()">🗃️ Cargar Datos Ejemplo</button>
+                <button class="btn btn-secondary" onclick="showSection('agricultores')">+ Agricultor</button>
+                <button class="btn btn-secondary" onclick="showSection('productos')">+ Producto</button>
+            </div>
+        </section>
+
+        <!-- Agricultores Section -->
+        <section id="agricultores" class="section">
+            <div class="header">
+                <h2>Gestión de Agricultores</h2>
+            </div>
+
+            <div class="form-card">
+                <h3>Nuevo Agricultor</h3>
+                <form id="form-agricultor">
+                    <div class="form-row">
+                        <input type="text" id="idSocio" placeholder="ID Socio (ej: SOC001)" required>
+                        <input type="text" id="dni" placeholder="DNI (ej: 12345678A)" required>
+                    </div>
+                    <div class="form-row">
+                        <input type="text" id="nombre" placeholder="Nombre" required>
+                        <input type="text" id="apellidos" placeholder="Apellidos" required>
+                    </div>
+                    <input type="tel" id="telefono" placeholder="Teléfono" required>
+                    <button type="submit" class="btn btn-primary">Agregar Agricultor</button>
+                </form>
+            </div>
+
+            <div class="table-card">
+                <h3>Lista de Agricultores</h3>
+                <div class="table-container">
+                    <table id="table-agricultores">
+                        <thead>
+                        <tr>
+                            <th>ID Socio</th>
+                            <th>DNI</th>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td colspan="4">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Productos Section -->
+        <section id="productos" class="section">
+            <div class="header">
+                <h2>Gestión de Productos</h2>
+            </div>
+
+            <div class="form-card">
+                <h3>Nuevo Producto</h3>
+                <form id="form-producto">
+                    <div class="form-row">
+                        <input type="text" id="idProducto" placeholder="ID Producto (ej: PROD001)" required>
+                        <input type="text" id="descripcion" placeholder="Descripción (ej: Tomates)" required>
+                    </div>
+                    <div class="form-row">
+                        <select id="categoria" required>
+                            <option value="">Seleccionar Categoría</option>
+                            <option value="Hortalizas">Hortalizas</option>
+                            <option value="Cítricos">Cítricos</option>
+                            <option value="Tubérculos">Tubérculos</option>
+                            <option value="Frutos">Frutos</option>
+                        </select>
+                        <input type="text" id="tipoContenedor" placeholder="Tipo Contenedor" required>
+                    </div>
+                    <input type="number" id="factorTiempoEntrega" step="0.1" min="0.1" placeholder="Factor Tiempo (ej: 1.5)" required>
+                    <button type="submit" class="btn btn-primary">Agregar Producto</button>
+                </form>
+            </div>
+
+            <div class="table-card">
+                <h3>Lista de Productos</h3>
+                <div class="table-container">
+                    <table id="table-productos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Descripción</th>
+                            <th>Categoría</th>
+                            <th>Factor Tiempo</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td colspan="4">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calendario Section -->
+        <section id="calendario" class="section">
+            <div class="header">
+                <h2>Planificación de Entregas</h2>
+            </div>
+
+            <div class="form-card">
+                <h3>Planificar Entrega</h3>
+                <form id="form-calendario">
+                    <div class="form-row">
+                        <input type="date" id="fechaEntrega" required>
+                        <select id="selectAgricultor" required>
+                            <option value="">Cargando agricultores...</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <select id="selectProducto" required>
+                            <option value="">Cargando productos...</option>
+                        </select>
+                        <input type="number" id="cantidad" min="1" placeholder="Cantidad (kg)" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Planificar</button>
+                        <button type="button" class="btn btn-secondary" onclick="buscarHueco()">🔍 Buscar Hueco</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="calendar-card">
+                <h3>Calendario del Día</h3>
+                <input type="date" id="fechaCalendario" onchange="loadCalendario()">
+                <div id="calendario-slots">
+                    <p>Selecciona una fecha para ver las entregas</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Empresas Section -->
+        <section id="empresas" class="section">
+            <div class="header">
+                <h2>Empresas Compradoras</h2>
+            </div>
+
+            <div class="form-card">
+                <h3>Nueva Empresa</h3>
+                <form id="form-empresa">
+                    <div class="form-row">
+                        <input type="text" id="cif" placeholder="CIF (ej: A12345678)" required>
+                        <input type="text" id="razonSocial" placeholder="Razón Social" required>
+                    </div>
+                    <div class="form-row">
+                        <input type="text" id="direccion" placeholder="Dirección" required>
+                        <input type="text" id="localidad" placeholder="Localidad" required>
+                    </div>
+                    <input type="tel" id="telefonoEmpresa" placeholder="Teléfono Empresa" required>
+
+                    <h4>Representante</h4>
+                    <div class="form-row">
+                        <input type="text" id="dniRepresentante" placeholder="DNI Representante" required>
+                        <input type="text" id="nombreRepresentante" placeholder="Nombre Completo" required>
+                    </div>
+                    <div class="form-row">
+                        <input type="tel" id="telefonoRepresentante" placeholder="Teléfono" required>
+                        <input type="email" id="emailRepresentante" placeholder="Email" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Agregar Empresa</button>
+                </form>
+            </div>
+
+            <div class="table-card">
+                <h3>Lista de Empresas</h3>
+                <div class="table-container">
+                    <table id="table-empresas">
+                        <thead>
+                        <tr>
+                            <th>CIF</th>
+                            <th>Razón Social</th>
+                            <th>Localidad</th>
+                            <th>Representante</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td colspan="4">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Config Section -->
+        <section id="config" class="section">
+            <div class="header">
+                <h2>Configuración</h2>
+            </div>
+
+            <div class="form-card">
+                <h3>Horarios de Operación</h3>
+                <form id="form-config">
+                    <div class="form-row">
+                        <div>
+                            <label>Hora Inicio:</label>
+                            <input type="time" id="horaInicio" required>
+                        </div>
+                        <div>
+                            <label>Hora Fin:</label>
+                            <input type="time" id="horaFin" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Actualizar Horarios</button>
+                </form>
+            </div>
+
+            <div class="info-card">
+                <h3>Estado del Sistema</h3>
+                <div id="system-info">
+                    <p>Cargando información...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Messages -->
+<div id="messages"></div>
+
+<!-- Scripts -->
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
